@@ -3,6 +3,9 @@ const knex = require("../config/db")
 getAllData = (req, res) =>{
     knex.select("*").from("saral_api")
     .then((data)=>{
+        if(data == 0){
+            res.send({"status":"database is empty"})
+        }
         res.send({'data':data, 'status': 'success', 'count': data.length})
     })
     .catch((err)=>{
@@ -14,6 +17,9 @@ getCoursById = (req, res)=>{
     console.log("data.....");
     knex.select("*").from("saral_api").where('id', req.params.id)
     .then((data)=>{
+        if(data == 0){
+            res.send({"status":"id not found"})
+        } 
         console.log();
         res.send(data)
     }).catch((err)=>{
@@ -25,6 +31,7 @@ getCoursById = (req, res)=>{
 deleteCoursById = (req,res)=>{
     knex.select("*").from("saral_api").where("id",req.params.id).del()
     .then((data)=>{
+        if (data == 0)
         res.send({"status":"success", "id GETdeleted":req.params.id})
     })
     .catch((err)=>{
@@ -37,6 +44,9 @@ updateDataById = (req,res)=>{
     .where('id',req.params.id)
     .update(req.body)
     .then((data)=>{
+        if (data == 0){
+            res.send("status":"id not found"})
+        }
         res.send({"status":"update success"})
     })
     .catch((err)=>{
