@@ -6,7 +6,9 @@ getAllData = (req, res) =>{
         if(data == 0){
             res.send({"status":"database is empty"})
         }
+        else{
         res.send({'data':data, 'status': 'success', 'count': data.length})
+        }
     })
     .catch((err)=>{
         res.send({'status': 'error', 'message': err})
@@ -20,8 +22,9 @@ getCoursById = (req, res)=>{
         if(data == 0){
             res.send({"status":"id not found"})
         } 
-        console.log();
-        res.send(data)
+        else{
+            res.send(data)
+        }
     }).catch((err)=>{
         console.log(err);
         res.send({"stsud":err})
@@ -31,8 +34,13 @@ getCoursById = (req, res)=>{
 deleteCoursById = (req,res)=>{
     knex.select("*").from("saral_api").where("id",req.params.id).del()
     .then((data)=>{
-        if (data == 0)
-        res.send({"status":"success", "id GETdeleted":req.params.id})
+        if (data == 0){
+            res.send({"status":"success", "id GETdeleted":req.params.id})
+        }
+        else{
+            res.send({"status":"id not found"})
+        }
+        
     })
     .catch((err)=>{
         res.send({"status":err})
@@ -47,7 +55,9 @@ updateDataById = (req,res)=>{
         if (data == 0){
             res.send("status":"id not found"})
         }
-        res.send({"status":"update success"})
+        else:{
+            res.send({"status":"update success"})
+        }
     })
     .catch((err)=>{
         res.send({"status":err})
