@@ -3,15 +3,15 @@ const knex = require("../config/db")
 getAllData = (req, res) =>{
     knex.select("*").from("saral_api")
     .then((data)=>{
-        if(data == 0){
-            res.send({"status":"database is empty"})
+        if(data.length == 0){
+            res.send({"status":"error",message:"database is empty"})
         }
         else{
-        res.send({'data':data, 'status': 'success', 'count': data.length})
+            res.send({'status': 'success', 'count': data.length,data:data})
         }
     })
     .catch((err)=>{
-        res.send({'status': 'error', 'message': err})
+        res.send({'status': 'error', 'message': err.message})
     })
 }
 
@@ -19,11 +19,11 @@ getCoursById = (req, res)=>{
     console.log("data.....");
     knex.select("*").from("saral_api").where('id', req.params.id)
     .then((data)=>{
-        if(data == 0){
-            res.send({"status":"id not found"})
+        if(data.length == 0){
+            res.send({"status":"error",message:"id not found..."})
         } 
         else{
-            res.send(data)
+            res.send({status:"success",count:data.length,data:data})
         }
     }).catch((err)=>{
         console.log(err);
@@ -32,15 +32,15 @@ getCoursById = (req, res)=>{
 }
 
 deleteCoursById = (req,res)=>{
-    knex.select("*").from("saral_api").where("id",req.params.id).del()
+    let id = req.params.id
+    knex.select("*").from("saral_api").where({"id":id}).del()
     .then((data)=>{
-        if (data == 0){
-            res.send({"status":"success", "id GETdeleted":req.params.id})
+        console.log(data);
+        if(data > 0){
+            res.send({status:"success",message:"course deleted successfully..."})
+        }else{
+            res.send({status:"error",message:"id not found..."})
         }
-        else{
-            res.send({"status":"id not found"})
-        }
-        
     })
     .catch((err)=>{
         res.send({"status":err})
@@ -53,13 +53,12 @@ updateDataById = (req,res)=>{
     .update(req.body)
     .then((data)=>{
         if (data == 0){
-            res.send("status":"id not found"})
+            res.send({"status":"success",message:"id not found..."})
         }
-        else:{
-            res.send({"status":"update success"})
+        else{
+            res.send({"status":"success",message:"course updated successfully..."})
         }
-    })
-    .catch((err)=>{
+    }).catch((err)=>{
         res.send({"status":err})
     })
 }
